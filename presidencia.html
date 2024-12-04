@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAI Presidencia</title>
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* Barra superior */
+        .navbar {
+            background-color: #6c757d;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        /* Botón del menú */
+        .menu-btn {
+            background-color: white;
+            color: #6c757d;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu-btn:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* Menú desplegable */
+        .menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            text-align: center;
+            width: 200px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu a:last-child {
+            border-bottom: none;
+        }
+
+        .menu a:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* Mostrar menú al tocar */
+        .menu-container.active .menu {
+            display: block;
+        }
+
+        /* Espaciado principal */
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content h1 {
+            color: #333;
+        }
+    </style>
+    <script>
+        // Script para alternar el estado del menú
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuContainer = document.querySelector(".menu-container");
+            const menuButton = document.querySelector(".menu-btn");
+
+            menuButton.addEventListener("click", function () {
+                menuContainer.classList.toggle("active");
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Barra superior -->
+    <div class="navbar">
+        <div class="menu-container">
+            <button class="menu-btn">MENÚ</button>
+            <div class="menu">
+                <a href="secretaria.html">Secretaría</a>
+                <a href="tesoreria.html">Tesorería</a>
+                <a href="discipulado.html">Discipulado</a>
+                <a href="visitacion.html">Visitación</a>
+                <a href="asistencia_cultos.html">Actividades</a>
+                <a href="reuniones.html">Reuniones</a>
+                <a href="cambiar_contrasena.html">Cambiar Contraseña</a>
+                <a href="bajas.html">Bajas</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+        <h1>Bienvenida a SAI Presidencia</h1>
+        <p>Seleccione una opción del menú desplegable para continuar.</p>
+    </div>
+
+</body>
+</html>
