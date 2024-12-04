@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión - SAI MENSAJERAS EDL SEÑOR MR</title>
+    <style>
+        /* Estilos globales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .input-field:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #1e40af;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            color: #2563eb;
+            font-size: 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <div class="logo">
+            SAI MENSAJERAS EDL SEÑOR MR
+        </div>
+
+        <!-- Formulario de inicio de sesión -->
+        <h1>Inicio de Sesión</h1>
+        <form id="loginForm">
+            <input type="text" id="username" class="input-field" placeholder="Usuario" required>
+            <input type="password" id="password" class="input-field" placeholder="Contraseña" required>
+            <button type="submit" class="btn">Iniciar Sesión</button>
+        </form>
+
+        <!-- Mensaje de error (se muestra si las credenciales son incorrectas) -->
+        <div id="errorMessage" class="message" style="display: none;">
+            Usuario o contraseña incorrectos.
+        </div>
+    </div>
+
+    <script>
+        // Función para verificar el inicio de sesión
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Obtener valores del formulario
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Verificar credenciales (esto es solo un ejemplo simple)
+            if (username === "admin" && password === "1234") {
+                alert("Bienvenido, " + username);
+                // Redirigir a la página principal después de un inicio de sesión exitoso
+                window.location.href = "main-page.html"; // Cambia este enlace por la página principal
+            } else {
+                document.getElementById("errorMessage").style.display = "block";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
