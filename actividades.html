@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencia actividades</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .menu-toggle {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .navbar .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .menu {
+            display: none;
+            background-color: #1e3a8a;
+            padding: 10px;
+        }
+
+        .menu.active {
+            display: block;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu ul li {
+            padding: 10px 0;
+        }
+
+        .menu ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            text-align: center;
+        }
+
+        .buttons {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+        }
+
+        .add-button {
+            background-color: #4caf50;
+        }
+
+        .save-button {
+            background-color: #f44336;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+        <div class="logo">SAI SECRETARIA</div>
+        <div class="user-info">Bienvenido, <span id="username"></span></div>
+    </div>
+
+    <div id="menu" class="menu">
+        <ul>
+            <li><a href="discipulado.html">Discipulado</a></li>
+            <li><a href="visitacion.html">Visitación</a></li>
+            <li><a href="asistencia-congresos.html">Asistencia Congresos></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2>Asistencia Ayunos</h2>
+
+        <div class="buttons">
+            <button class="add-button" onclick="addRow()">Añadir Actividad</button>
+        </div>
+
+        <table id="activitiesTable">
+            <thead>
+                <tr>
+                    <th>Ayuno</th>
+                    <th>Fecha</th>
+                    <th>coordinado</th>
+                    <th>Asistencia%</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h3>Estadísticas</h3>
+        <table id="statisticsTable">
+            <thead>
+                <tr>
+                    <th>Total de Actividades</th>
+                    <th>Promedio de Asistencia%</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="totalActivities">0</td>
+                    <td id="averageAttendance">0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const username = localStorage.getItem('username') || "Usuario";
+        document.getElementById('username').textContent = username;
+
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('active');
+        }
+
+        function addRow() {
+            const table = document.getElementById("activitiesTable").getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Nombre de la actividad"></td>
+                <td><input type="date"></td>
+                <td><input type="text" placeholder="Responsable"></td>
+                <td><input type="number" placeholder="%" min="0" max="100"></td>
+                <td><button onclick="deleteRow(this)">Eliminar</button></td>
+            `;
+            saveInformation();
+        }
+
+        function deleteRow(button) {
+            button.closest('tr').remove();
+            saveInformation();
+        }
+
+        function saveInformation() {
+            const rows = document.querySelectorAll("#activitiesTable tbody tr");
+            const data = Array.from(rows).map(row => ({
+                activity: row.cells[0].querySelector('input').value,
+                date: row.cells[1].querySelector('input').value,
+                responsible: row.cells[2].querySelector('input').value,
+                attendance: row.cells[3].querySelector('input').value,
+            }));
+            localStorage.setItem("activities", JSON.stringify(data));
+            updateStatistics(data);
+        }
+
+        function updateStatistics(data) {
+            const total = data.length;
+            const average =
+                total > 0
+                    ? data.reduce((sum, item) => sum + (parseFloat(item.attendance) || 0), 0) / total
+                    : 0;
+            document.getElementById("totalActivities").textContent = total;
+            document.getElementById("averageAttendance").textContent = average.toFixed(2);
+        }
+
+        window.onload = function () {
+            const savedData = JSON.parse(localStorage.getItem("activities")) || [];
+            const table = document.getElementById("activitiesTable").getElementsByTagName('tbody')[0];
+            savedData.forEach(item => {
+                const newRow = table.insertRow();
+                newRow.innerHTML = `
+                    <td><input type="text" value="${item.activity}" /></td>
+                    <td><input type="date" value="${item.date}" /></td>
+                    <td><input type="text" value="${item.responsible}" /></td>
+                    <td><input type="number" value="${item.attendance}" min="0" max="100" /></td>
+                    <td><button onclick="deleteRow(this)">Eliminar</button></td>
+                `;
+            });
+            updateStatistics(savedData);
+        };
+    </script>
+</body>
+
+</html>
