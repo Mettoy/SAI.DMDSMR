@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Editable con Guardado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .search-container input {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 250px;
+        }
+
+        .search-container input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .edit-button, .delete-button {
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .edit-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .edit-button:hover {
+            background-color: #218838;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .save-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .save-button:hover {
+            background-color: #0056b3;
+        }
+
+        input.editable {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Tabla Editable con Almacenamiento</h2>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar en la tabla..." onkeyup="filterTable()">
+        </div>
+
+        <table id="editableTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="editable-text">Juan Pérez</span></td>
+                    <td><span class="editable-text">juan.perez@example.com</span></td>
+                    <td><span class="editable-text">555-9876</span></td>
+                    <td><span class="editable-text">Activo</span></td>
+                    <td>
+                        <button class="edit-button" onclick="editRow(this)">Editar</button>
+                        <button class="delete-button" onclick="deleteRow(this)">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="editable-text">Ana Gómez</span></td>
+                    <td><span class="editable-text">ana.gomez@example.com</span></td>
+                    <td><span class="editable-text">555-4567</span></td>
+                    <td><span class="editable-text">Inactivo</span></td>
+                    <td>
+                        <button class="edit-button" onclick="editRow(this)">Editar</button>
+                        <button class="delete-button" onclick="deleteRow(this)">Eliminar</button>
+                    </td>
+                </tr>
+
+
+                <!-- Más filas pueden ser añadidas aquí -->
+            </tbody>
+        </table>
+
+        <button class="save-button" onclick="saveTableData()">Guardar Información</button>
+    </div>
+
+    <script>
+        // Función para editar una fila
+        function editRow(button) {
+            const row = button.closest("tr");
+            const cells = row.getElementsByTagName("td");
+
+            for (let i = 0; i < 4; i++) {
+                const cell = cells[i];
+                const text = cell.innerText;
+                cell.innerHTML = `<input class="editable" value="${text}" />`;
+            }
+
+            // Cambiar el botón de editar a guardar
+            button.innerText = "Guardar";
+            button.onclick = function () { saveRow(button); };
+        }
+
+        // Guardar los cambios de una fila editada
+        function saveRow(button) {
+            const row = button.closest("tr");
+            const cells = row.getElementsByTagName("td");
+
+            for (let i = 0; i < 4; i++) {
+                const cell = cells[i];
+                const input = cell.querySelector("input");
+                cell.innerHTML = input.value;
+            }
+
+            // Cambiar el botón de guardar a editar
+            button.innerText = "Editar";
+            button.onclick = function () { editRow(button); };
+        }
+
+        // Eliminar una fila
+        function deleteRow(button) {
+            const row = button.closest("tr");
+            row.remove();
+        }
+
+        // Filtrar la tabla
+        function filterTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById("editableTable");
+            const rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                let rowContainsFilter = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].innerText.toUpperCase().includes(filter)) {
+                        rowContainsFilter = true;
+                        break;
+                    }
+                }
+
+                rows[i].style.display = rowContainsFilter ? "" : "none";
+            }
+        }
+
+        // Guardar todos los datos de la tabla en el almacenamiento local
+        function saveTableData() {
+            const table = document.getElementById("editableTable");
+            const rows = table.getElementsByTagName("tr");
+            const tableData = [];
+
+            // Iterar sobre todas las filas de la tabla
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                const rowData = [];
+                for (let j = 0; j < 4; j++) {
+                    rowData.push(cells[j].innerText);
+                }
+                tableData.push(rowData);
+            }
+
+            // Guardar los datos en localStorage
+            localStorage.setItem("tableData", JSON.stringify(tableData));
+            alert("Los cambios han sido guardados.");
+        }
+
+        // Cargar los datos guardados al cargar la página
+        window.onload = function () {
+            const savedData = JSON.parse(localStorage.getItem("tableData"));
+            if (savedData && Array.isArray(savedData)) {
+                const table = document.getElementById("editableTable").getElementsByTagName("tbody")[0];
+                savedData.forEach(rowData => {
+                    const newRow = table.insertRow();
+                    for (let i = 0; i < rowData.length; i++) {
+                        const newCell = newRow.insertCell();
+                        newCell.innerHTML = `<span class="editable-text">${rowData[i]}</span>`;
+                    }
+                    const actionsCell = newRow.insertCell();
+                    actionsCell.innerHTML = `
+                        <button class="edit-button" onclick="editRow(this)">Editar</button>
+                        <button class="delete-button" onclick="deleteRow(this)">Eliminar</button>
+                    `;
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
